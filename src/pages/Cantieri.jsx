@@ -1,142 +1,159 @@
-import { useState, useRef, useEffect } from "react";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import { Link } from "react-router-dom";
-import gsap from "gsap";
+import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
-import Bento from "../components/Bento";
+// 1. IMPORTANTE: Questo deve essere presente per dare altezza alla mappa
 import "leaflet/dist/leaflet.css";
+import gsap from "gsap";
+import BentoCard from "../components/BentoCard";
+import Bento from "../components/Bento";
 
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
-let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconAnchor: [12, 41],
+const customIcon = new L.DivIcon({
+  className: "custom-div-icon",
+  html: "<div style='background-color: #2563eb; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); cursor: pointer;'></div>",
+  iconSize: [14, 14],
+  iconAnchor: [7, 7],
 });
-L.Marker.prototype.options.icon = DefaultIcon;
 
-const projectsMock = [
-  {
-    id: 1,
-    lat: 44.4172,
-    lng: 11.9033,
-    title: "Villa Residenziale",
-    year: 2023,
-    cost: "€250.000",
-    description: "Ristrutturazione completa e cappotto termico.",
-    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
-  },
-  {
-    id: 2,
-    lat: 44.38,
-    lng: 11.92,
-    title: "Capannone Industriale",
-    year: 2022,
-    cost: "€450.000",
-    description: "Nuova costruzione con pannelli solari integrati.",
-    images: [],
-  },
-];
+// 2. Fix fondamentale: forza la mappa a ricalcolare le dimensioni
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    // Ricalcola la dimensione ogni volta che il browser cambia risoluzione
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 500);
+    window.addEventListener("resize", () => map.invalidateSize());
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", () => map.invalidateSize());
+    };
+  }, [map]);
+  return null;
+}
 
 export default function Cantieri() {
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [isMapActive, setIsMapActive] = useState(false);
-  const mapContainerRef = useRef(null);
   const pageRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const mapWrapperRef = useRef(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  useEffect(() => {
-    gsap.fromTo(
-      pageRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-    );
+  const projectsData = [
+    {
+      id: 1,
+      position: [44.42, 11.91],
+      title: "Villa Storica",
+      city: "Lugo",
+      category: "Ristrutturazione",
+      cost: "€€€",
+      description: "Restauro conservativo.",
+    },
+    {
+      id: 2,
+      position: [41.89, 12.49],
+      title: "Attico Roma",
+      city: "Roma",
+      category: "Lusso",
+      cost: "€€€€",
+      description: "Design moderno.",
+    },
+    {
+      id: 3,
+      position: [45.46, 9.19],
+      title: "Uffici Milano",
+      city: "Milano",
+      category: "Industriale",
+      cost: "€€€",
+      description: "Sede aziendale.",
+    },
+  ];
+
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+      tl.to(pageRef.current, { autoAlpha: 1, duration: 0.4 })
+        .fromTo(
+          heroContentRef.current.children,
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power3.out",
+          },
+          "-=0.2",
+        )
+        .fromTo(
+          mapWrapperRef.current,
+          { y: 40, scale: 0.9, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.2)" },
+          "-=0.5",
+        );
+    }, pageRef);
+    return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (selectedProject) return;
-      if (
-        mapContainerRef.current &&
-        !mapContainerRef.current.contains(e.target)
-      ) {
-        setIsMapActive(false);
-      }
-    };
-    if (isMapActive) {
-      document.addEventListener("mousedown", handleOutsideClick);
-      document.addEventListener("touchstart", handleOutsideClick);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("touchstart", handleOutsideClick);
-    };
-  }, [isMapActive, selectedProject]);
-
   return (
-    <div className="p-4 md:p-12 opacity-0" ref={pageRef}>
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white">
-        I Nostri Cantieri
-      </h1>
+    <div
+      ref={pageRef}
+      className="bg-white dark:bg-slate-950 min-h-screen"
+      style={{ visibility: "hidden" }}
+    >
+      <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-16 lg:py-0 px-6">
+        <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          <div ref={heroContentRef} className="w-full lg:flex-1 text-left z-20">
+            <h1 className="text-sm uppercase tracking-[0.3em] font-bold text-blue-600 mb-6">
+              I nostri lavori — Italia
+            </h1>
+            <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter uppercase">
+              Qualità in <br /> ogni città.
+            </h2>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed font-medium">
+              Ogni punto sulla mappa indica un progetto completato. Clicca sulle
+              posizioni per scoprire i dettagli del lavoro.
+            </p>
+          </div>
 
-      <div
-        ref={mapContainerRef}
-        className="relative shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 mx-auto max-w-6xl bg-gray-100 dark:bg-slate-800"
-      >
-        {!isMapActive && L.Browser.mobile && (
-          <div
-            className="absolute inset-0 z-[20] bg-white/10 dark:bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center cursor-pointer"
-            onClick={() => setIsMapActive(true)}
-          >
-            <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-6 py-3 rounded-full border border-gray-200 shadow-xl text-sm font-semibold">
-              📍 Tocca per esplorare
+          <div ref={mapWrapperRef} className="w-full lg:flex-[1.5] relative">
+            {/* 3. ALTEZZA FISSA: Cruciale per evitare altezza 0 su mobile */}
+            <div className="w-full h-[450px] md:h-[550px] lg:h-[600px] relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 bg-slate-100">
+              {/* Placeholder WIP visibile se la mappa non carica */}
+              <img
+                src="cantieri/wip.jpg"
+                className="absolute inset-0 w-full h-full object-cover opacity-10"
+                alt=""
+              />
+
+              <MapContainer
+                center={[41.87, 12.56]}
+                zoom={5}
+                scrollWheelZoom={false}
+                zoomControl={false}
+                style={{ height: "100%", width: "100%" }} // Forza l'altezza al 100% del div genitore
+              >
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+                <MapResizer />
+
+                {projectsData.map((project) => (
+                  <Marker
+                    key={project.id}
+                    position={project.position}
+                    icon={customIcon}
+                    eventHandlers={{ click: () => setSelectedProject(project) }}
+                  />
+                ))}
+              </MapContainer>
             </div>
           </div>
-        )}
-
-        {isMapActive && L.Browser.mobile && (
-          <button
-            className="absolute top-4 right-4 z-[20] bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 py-2 rounded-full border border-gray-200 shadow-xl text-xs font-bold"
-            onClick={() => setIsMapActive(false)}
-          >
-            🔒 Blocca Scorrimento
-          </button>
-        )}
-
-        <div
-          className={`h-[350px] md:h-[600px] w-full relative transition-opacity duration-300 ${!isMapActive && L.Browser.mobile ? "opacity-70 pointer-events-none" : "opacity-100 pointer-events-auto"}`}
-        >
-          <MapContainer
-            center={[44.417, 11.903]}
-            zoom={11}
-            scrollWheelZoom={false}
-            className="h-full w-full"
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {projectsMock.map((project) => (
-              <Marker
-                key={project.id}
-                position={[project.lat, project.lng]}
-                eventHandlers={{ click: () => setSelectedProject(project) }}
-              />
-            ))}
-          </MapContainer>
         </div>
-      </div>
+      </section>
 
-      <div className="mt-12 text-center pb-8">
-        <Link
-          to="/contatti"
-          className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-lg"
-        >
-          Hai un progetto? Contattaci
-        </Link>
-      </div>
-
-      <Bento
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+      {selectedProject && (
+        <Bento
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </div>
   );
 }
