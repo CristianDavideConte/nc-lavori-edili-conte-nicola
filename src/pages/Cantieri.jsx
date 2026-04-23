@@ -26,7 +26,7 @@ const cantieriMock = [
     anno: 2023,
     costo: "€250.000",
     desc: "Ristrutturazione completa e cappotto termico.",
-    images: ["/cantieri/wip.jpg"],
+    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
   },
   {
     id: 2,
@@ -89,9 +89,10 @@ const Carousel = ({ images }) => {
   };
 
   useEffect(() => {
-    if (!images || images.length <= 1) return;
+    if (!images || images.length === 0) return;
 
-    if (currentIndex === prevIndex.current) {
+    // Se c'è 1 sola immagine, O se è il primissimo render, la rendiamo visibile senza animazione
+    if (images.length === 1 || currentIndex === prevIndex.current) {
       gsap.set(imageRefs.current, {
         opacity: 0,
         scale: 0.5,
@@ -104,6 +105,7 @@ const Carousel = ({ images }) => {
         xPercent: 0,
         zIndex: 10,
       });
+      prevIndex.current = currentIndex;
       return;
     }
 
@@ -205,36 +207,59 @@ const Carousel = ({ images }) => {
     </div>
   );
 };
-
 export default function Cantieri() {
   const [selectedCantiere, setSelectedCantiere] = useState(null);
+  const [isMapActive, setIsMapActive] = useState(false);
 
   const modalRef = useRef(null);
   const overlayRef = useRef(null);
-  const pageRef = useRef(null);
+  const mapContainerRef = useRef(null);
 
   useEffect(() => {
-    gsap.fromTo(
-      pageRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-    );
-  }, []);
+    const handleOutsideClick = (e) => {
+      if (selectedCantiere) return;
+      if (
+        mapContainerRef.current &&
+        !mapContainerRef.current.contains(e.target)
+      ) {
+        setIsMapActive(false);
+      }
+    };
 
-  useEffect(() => {
-    if (selectedCantiere && modalRef.current && overlayRef.current) {
-      gsap.fromTo(
-        overlayRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 },
-      );
-
-      gsap.fromTo(
-        modalRef.current,
-        { scale: 0.2, y: 400, opacity: 0, transformOrigin: "bottom center" },
-        { scale: 1, y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.2)" },
-      );
+    if (isMapActive) {
+      document.addEventListener("mousedown", handleOutsideClick);
+      document.addEventListener("touchstart", handleOutsideClick);
     }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
+  }, [isMapActive, selectedCantiere]);
+
+  useEffect(() => {
+    if (selectedCantiere) {
+      document.body.style.overflow = "hidden";
+      if (modalRef.current && overlayRef.current) {
+        gsap.fromTo(
+          overlayRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3 },
+        );
+
+        gsap.fromTo(
+          modalRef.current,
+          { scale: 0.2, y: 400, opacity: 0, transformOrigin: "bottom center" },
+          { scale: 1, y: 0, opacity: 1, duration: 0.6, ease: "back.out(1.2)" },
+        );
+      }
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [selectedCantiere]);
 
   const closeModal = () => {
@@ -253,18 +278,43 @@ export default function Cantieri() {
   };
 
   return (
-    <div className="p-6 md:p-12" ref={pageRef}>
+    <div className="p-4 md:p-12">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white transition-colors">
         I Nostri Cantieri
       </h1>
 
-      <div className="relative shadow-xl rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 transition-colors">
-        <div className="h-[600px] w-full z-0 relative">
+      <div
+        ref={mapContainerRef}
+        className="relative shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 transition-colors mx-auto max-w-6xl bg-gray-100 dark:bg-slate-800"
+      >
+        {!isMapActive && L.Browser.mobile && (
+          <div
+            className="absolute inset-0 z-[20] bg-white/10 dark:bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center cursor-pointer"
+            onClick={() => setIsMapActive(true)}
+          >
+            <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-6 py-3 rounded-full border border-gray-200 dark:border-slate-600 shadow-xl text-sm font-semibold text-gray-900 dark:text-white transform transition active:scale-95">
+              📍 Tocca per esplorare la mappa
+            </div>
+          </div>
+        )}
+
+        {isMapActive && L.Browser.mobile && (
+          <button
+            className="absolute top-4 right-4 z-[20] bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 py-2 rounded-full border border-gray-200 dark:border-slate-600 shadow-xl text-xs font-bold text-gray-900 dark:text-white flex items-center gap-2 transform transition active:scale-95"
+            onClick={() => setIsMapActive(false)}
+          >
+            🔒 Blocca Scorrimento
+          </button>
+        )}
+
+        <div
+          className={`h-[350px] md:h-[600px] w-full relative transition-opacity duration-300 ${!isMapActive && L.Browser.mobile ? "opacity-70 pointer-events-none" : "opacity-100 pointer-events-auto"}`}
+        >
           <MapContainer
             center={center}
             zoom={11}
             scrollWheelZoom={false}
-            className="h-full w-full"
+            className="h-full w-full z-0"
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -279,50 +329,9 @@ export default function Cantieri() {
             ))}
           </MapContainer>
         </div>
-
-        {selectedCantiere && (
-          <div
-            ref={overlayRef}
-            className="absolute top-0 left-0 w-full h-full bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-10"
-            onClick={closeModal}
-          >
-            <div
-              ref={modalRef}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-slate-600/30 p-6 md:p-8 rounded-2xl max-w-lg w-full relative shadow-2xl transition-colors duration-300 flex flex-col gap-4"
-            >
-              <button
-                className="absolute top-4 right-4 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 w-8 h-8 rounded-full text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-bold flex items-center justify-center transition"
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 pr-8">
-                  {selectedCantiere.titolo}
-                </h2>
-                <div className="flex gap-4 text-sm text-gray-600 dark:text-slate-400 mb-2">
-                  <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
-                    📅 {selectedCantiere.anno}
-                  </span>
-                  <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
-                    💰 {selectedCantiere.costo}
-                  </span>
-                </div>
-              </div>
-
-              <Carousel images={selectedCantiere.images} />
-
-              <p className="text-gray-700 dark:text-slate-300 leading-relaxed mt-2">
-                {selectedCantiere.desc}
-              </p>
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className="mt-12 text-center">
+      <div className="mt-12 text-center pb-8">
         <Link
           to="/contatti"
           className="px-8 py-4 bg-blue-600/90 backdrop-blur-md text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-lg shadow-blue-600/20"
@@ -330,6 +339,47 @@ export default function Cantieri() {
           Hai un progetto? Contattaci
         </Link>
       </div>
+
+      {selectedCantiere && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 w-full h-full bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-[100]"
+          onClick={closeModal}
+        >
+          <div
+            ref={modalRef}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-slate-600/30 p-6 md:p-8 rounded-2xl max-w-lg w-full relative shadow-2xl transition-colors duration-300 flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+          >
+            <button
+              className="absolute top-4 right-4 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 w-8 h-8 rounded-full text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-bold flex items-center justify-center transition"
+              onClick={closeModal}
+            >
+              ✕
+            </button>
+
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 pr-8">
+                {selectedCantiere.titolo}
+              </h2>
+              <div className="flex gap-4 text-sm text-gray-600 dark:text-slate-400 mb-2">
+                <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
+                  📅 {selectedCantiere.anno}
+                </span>
+                <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
+                  💰 {selectedCantiere.costo}
+                </span>
+              </div>
+            </div>
+
+            <Carousel images={selectedCantiere.images} />
+
+            <p className="text-gray-700 dark:text-slate-300 leading-relaxed mt-2">
+              {selectedCantiere.desc}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
