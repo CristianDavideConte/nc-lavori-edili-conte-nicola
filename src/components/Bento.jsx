@@ -59,12 +59,12 @@ export default function Bento({ project, onClose }) {
       >
         <button
           onClick={handleClose}
-          className="fixed top-10 right-10 md:top-16 md:right-16 z-[160] bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 active:scale-90 md:hover:scale-110 transition-transform"
+          className="fixed top-10 right-10 md:top-16 md:right-16 z-160 bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-90 md:hover:scale-110 transition-transform"
         >
           ✕
         </button>
 
-        <div className="flex-1 overflow-y-auto no-scrollbar relative">
+        <div className="flex-1 overflow-y-auto no-scrollbar relative p-0">
           <div
             ref={gridRef}
             className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-full"

@@ -88,8 +88,8 @@ export default function Carousel({ images }) {
 
   if (!images || images.length === 0)
     return (
-      <div className="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
-        Nessuna foto
+      <div className="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center italic text-slate-500">
+        Nessuna foto disponibile
       </div>
     );
 
@@ -111,13 +111,13 @@ export default function Carousel({ images }) {
       ))}
 
       {images.length > 1 && (
-        <div className="absolute inset-0 z-20 pointer-events-none">
+        <>
           <button
             onClick={(e) => {
               e.stopPropagation();
               prevSlide();
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 backdrop-blur-md text-white w-10 h-10 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
+            className="absolute left-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-90 md:hover:scale-110 transition-all opacity-0 md:group-hover:opacity-100 pointer-events-auto"
           >
             ←
           </button>
@@ -127,12 +127,13 @@ export default function Carousel({ images }) {
               e.stopPropagation();
               nextSlide();
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 backdrop-blur-md text-white w-10 h-10 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
+            className="absolute right-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-90 md:hover:scale-110 transition-all opacity-0 md:group-hover:opacity-100 pointer-events-auto"
           >
             →
           </button>
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+          {/* INDICATORE APPLE STYLE: Punti fluttuanti con pillola attiva */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30 pointer-events-auto drop-shadow-md">
             {images.map((_, idx) => (
               <button
                 key={idx}
@@ -140,11 +141,15 @@ export default function Carousel({ images }) {
                   e.stopPropagation();
                   goToSlide(idx);
                 }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white scale-125" : "bg-white/40"}`}
+                className={`rounded-full transition-all duration-500 cursor-pointer ${
+                  idx === currentIndex
+                    ? "w-5 h-1.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                    : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"
+                }`}
               />
             ))}
           </div>
-        </div>
+        </>
       )}
     </div>
   );
