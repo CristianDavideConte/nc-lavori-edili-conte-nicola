@@ -1,15 +1,29 @@
 import React, { useState, useRef, useEffect } from "react";
-import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import gsap from "gsap";
 import Home from "./pages/Home";
 import Cantieri from "./pages/Cantieri";
 import Contatti from "./pages/Contatti";
 import Footer from "./components/Footer";
 
-function App() {
+function AppContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const linksRef = useRef([]);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pages = ["/", "/cantieri", "/contatti"];
+
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -46,109 +60,156 @@ function App() {
     });
   };
 
+  const handleTouchStart = (e) => {
+    if (
+      e.target.closest(".touch-pan-y") ||
+      e.target.closest(".leaflet-container")
+    )
+      return;
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartX.current || !touchStartY.current) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const deltaX = touchStartX.current - touchEndX;
+    const deltaY = touchStartY.current - touchEndY;
+
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      touchStartX.current = null;
+      touchStartY.current = null;
+      return;
+    }
+
+    const currentIndex = pages.indexOf(location.pathname);
+
+    if (deltaX > 60 && currentIndex < pages.length - 1) {
+      navigate(pages[currentIndex + 1]);
+    } else if (deltaX < -60 && currentIndex > 0) {
+      navigate(pages[currentIndex - 1]);
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen font-sans text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 transition-colors duration-300">
-        <nav className="p-6 flex justify-between items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-gray-200/50 dark:border-slate-800/50 fixed w-full z-50 transition-colors duration-300">
-          <div className="text-xl font-bold">N.C Lavori Edili</div>
+    <div
+      className="flex flex-col min-h-screen font-sans text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 transition-colors duration-300"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <nav className="p-6 flex justify-between items-center bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border-b border-gray-200/50 dark:border-slate-800/50 fixed w-full z-50 transition-colors duration-300">
+        <div className="text-xl font-bold">N.C Lavori Edili</div>
 
-          <div className="hidden md:flex gap-8">
-            <Link
-              to="/"
-              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
-            >
-              Chi Siamo
-            </Link>
-            <Link
-              to="/cantieri"
-              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
-            >
-              I Nostri Cantieri
-            </Link>
-            <Link
-              to="/contatti"
-              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
-            >
-              Contattaci
-            </Link>
-          </div>
+        <div className="hidden md:flex gap-8">
+          <Link
+            to="/"
+            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+          >
+            Chi Siamo
+          </Link>
+          <Link
+            to="/cantieri"
+            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+          >
+            I Nostri Cantieri
+          </Link>
+          <Link
+            to="/contatti"
+            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+          >
+            Contattaci
+          </Link>
+        </div>
 
+        <button
+          onClick={openMenu}
+          className="md:hidden flex flex-col justify-center items-center gap-1.5 focus:outline-none p-2"
+          aria-label="Apri Menu"
+        >
+          <span className="block w-6 h-0.5 bg-current"></span>
+          <span className="block w-6 h-0.5 bg-current"></span>
+          <span className="block w-6 h-0.5 bg-current"></span>
+        </button>
+      </nav>
+
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          onClick={closeMenu}
+          className="fixed inset-0 z-[60] bg-white/95 dark:bg-slate-950/95 backdrop-blur-3xl flex flex-col items-center justify-center cursor-pointer"
+        >
           <button
-            onClick={openMenu}
-            className="md:hidden flex flex-col justify-center items-center gap-1.5 focus:outline-none p-2"
-            aria-label="Apri Menu"
+            onClick={(e) => {
+              e.stopPropagation();
+              closeMenu();
+            }}
+            className="absolute top-6 right-6 w-10 h-10 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full flex items-center justify-center transition-colors text-xl font-bold cursor-pointer"
+            aria-label="Chiudi Menu"
           >
-            <span className="block w-6 h-0.5 bg-current"></span>
-            <span className="block w-6 h-0.5 bg-current"></span>
-            <span className="block w-6 h-0.5 bg-current"></span>
+            ✕
           </button>
-        </nav>
 
-        {isMenuOpen && (
-          <div
-            ref={menuRef}
-            onClick={closeMenu}
-            className="fixed inset-0 z-[60] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center cursor-pointer"
-          >
-            <button
+          <div className="flex flex-col gap-10 text-center">
+            <Link
+              ref={(el) => (linksRef.current[0] = el)}
+              to="/"
               onClick={(e) => {
                 e.stopPropagation();
                 closeMenu();
               }}
-              className="absolute top-6 right-6 w-10 h-10 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 rounded-full flex items-center justify-center transition-colors text-xl font-bold cursor-pointer"
-              aria-label="Chiudi Menu"
+              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
             >
-              ✕
-            </button>
-
-            <div className="flex flex-col gap-10 text-center">
-              <Link
-                ref={(el) => (linksRef.current[0] = el)}
-                to="/"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  closeMenu();
-                }}
-                className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
-              >
-                Chi Siamo
-              </Link>
-              <Link
-                ref={(el) => (linksRef.current[1] = el)}
-                to="/cantieri"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  closeMenu();
-                }}
-                className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
-              >
-                I Nostri Cantieri
-              </Link>
-              <Link
-                ref={(el) => (linksRef.current[2] = el)}
-                to="/contatti"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  closeMenu();
-                }}
-                className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
-              >
-                Contattaci
-              </Link>
-            </div>
+              Chi Siamo
+            </Link>
+            <Link
+              ref={(el) => (linksRef.current[1] = el)}
+              to="/cantieri"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeMenu();
+              }}
+              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              I Nostri Cantieri
+            </Link>
+            <Link
+              ref={(el) => (linksRef.current[2] = el)}
+              to="/contatti"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeMenu();
+              }}
+              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            >
+              Contattaci
+            </Link>
           </div>
-        )}
+        </div>
+      )}
 
-        <main className="flex-grow pt-20">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/cantieri" element={<Cantieri />} />
-            <Route path="/contatti" element={<Contatti />} />
-          </Routes>
-        </main>
+      <main className="flex-grow pt-20 overflow-hidden">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cantieri" element={<Cantieri />} />
+          <Route path="/contatti" element={<Contatti />} />
+        </Routes>
+      </main>
 
-        <Footer />
-      </div>
+      <Footer />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
