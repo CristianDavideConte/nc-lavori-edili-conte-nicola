@@ -32,7 +32,7 @@ export default function Home() {
         </p>
         <button
           onClick={scrollToDesc}
-          className="animate-bounce p-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+          className="animate-bounce cursor-pointer p-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
         >
           ↓ Scopri di più
         </button>
