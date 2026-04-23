@@ -54,7 +54,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center gap-12 md:gap-16">
           <div ref={heroContentRef} className="w-full md:flex-1 text-left z-20">
             <h1 className="text-sm uppercase tracking-[0.3em] font-bold text-blue-600 mb-6">
-              N.C. Lavori Edili — Lugo
+              N.C Lavori Edili — Lugo
             </h1>
             <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter">
               Edilizia di sostanza, <br />

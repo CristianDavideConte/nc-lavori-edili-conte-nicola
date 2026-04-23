@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import Carousel from "./Carousel";
@@ -11,7 +11,6 @@ export default function Bento({ project, onClose }) {
   useEffect(() => {
     if (project) {
       document.body.style.overflow = "hidden";
-      // Animazione fluida
       gsap.fromTo(
         overlayRef.current,
         { opacity: 0 },
@@ -44,7 +43,6 @@ export default function Bento({ project, onClose }) {
       className="fixed inset-0 z-[100] bg-white dark:bg-slate-950 overflow-y-auto flex justify-center items-start md:items-center p-4 md:p-12"
       onClick={handleClose}
     >
-      {/* RIPRISTINATO: Stile X Originale Premium */}
       <button
         onClick={handleClose}
         className="fixed top-5 right-5 md:top-10 md:right-10 z-[160] bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:scale-110 active:scale-90 transition-all"
@@ -67,7 +65,6 @@ export default function Bento({ project, onClose }) {
             <Carousel images={project.images} />
           </BentoCard>
 
-          {/* Card Titolo, Anno e Prezzo */}
           <BentoCard
             className="md:col-span-2 min-h-[250px] md:min-h-[300px] text-white justify-center"
             bg="bg-blue-600"
@@ -85,7 +82,6 @@ export default function Bento({ project, onClose }) {
             </div>
           </BentoCard>
 
-          {/* Card Descrizione */}
           <BentoCard bg="bg-white dark:bg-slate-800" className="justify-center">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
               Dettagli
@@ -95,7 +91,6 @@ export default function Bento({ project, onClose }) {
             </p>
           </BentoCard>
 
-          {/* Card Posizione */}
           <BentoCard
             className="text-center items-center justify-center min-h-[180px] md:min-h-[300px]"
             bg="bg-slate-50 dark:bg-slate-900/50"

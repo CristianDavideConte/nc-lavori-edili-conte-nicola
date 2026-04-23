@@ -1,8 +1,7 @@
-import React, { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import BentoCard from "../components/BentoCard";
 
-// Icone SVG Minimali
 const PhoneIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -59,10 +58,8 @@ export default function Contatti() {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
-      // Animiamo il contenitore principale
       tl.to(pageRef.current, { autoAlpha: 1, duration: 0.4 })
 
-        // Animazione Titoli (Sinistra)
         .fromTo(
           heroContentRef.current.children,
           { y: 30, autoAlpha: 0 },
@@ -76,7 +73,6 @@ export default function Contatti() {
           "-=0.2",
         )
 
-        // Animazione Bento (Destra) - Stile "I Nostri Lavori"
         .fromTo(
           gridRef.current.children,
           { y: 40, scale: 0.95, autoAlpha: 0 },
@@ -96,19 +92,16 @@ export default function Contatti() {
   }, []);
 
   return (
-    // visibility: 'hidden' previene il flash iniziale prima che JS parta
     <div
       ref={pageRef}
       className="bg-white dark:bg-slate-950 overflow-x-hidden min-h-screen"
       style={{ visibility: "hidden" }}
     >
-      {/* Hero Section - Allineamento millimetrico alla Home */}
       <section className="relative min-h-[90vh] flex items-center pt-24 pb-24 lg:py-0 px-6 overflow-visible">
         <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Colonna Testo */}
           <div ref={heroContentRef} className="w-full lg:flex-1 text-left z-20">
             <h1 className="text-sm uppercase tracking-[0.3em] font-bold text-blue-600 mb-6">
-              N.C. Lavori Edili — Lugo
+              N.C Lavori Edili — Lugo
             </h1>
             <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter">
               Mettiamoci <br /> in contatto.
@@ -119,15 +112,13 @@ export default function Contatti() {
             </p>
           </div>
 
-          {/* Colonna Bento Grid */}
           <div className="w-full lg:flex-[1.2] relative mt-10 lg:mt-0">
-            {/* Altezza minima forzata a 520px per centrare il titolo come in Home */}
             <div
               ref={gridRef}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:min-h-[520px] content-center"
             >
               <BentoCard
-                href="tel:+393336777943"
+                href="tel:+393336477943"
                 className="border-blue-100 dark:border-blue-900/20"
                 bg="bg-white dark:bg-slate-900"
               >
@@ -143,7 +134,7 @@ export default function Contatti() {
               </BentoCard>
 
               <BentoCard
-                href="https://wa.me/393336777943"
+                href="https://wa.me/393336477943"
                 className="border-green-100 dark:border-green-900/20"
                 bg="bg-white dark:bg-slate-900"
               >
@@ -204,10 +195,6 @@ export default function Contatti() {
           </div>
         </div>
       </section>
-
-      <footer className="py-12 text-center opacity-30 text-[10px] uppercase font-bold tracking-[0.4em] text-slate-500">
-        N.C. Lavori Edili di Nicola Conte — P.IVA 0123456789
-      </footer>
     </div>
   );
 }
