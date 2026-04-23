@@ -17,7 +17,6 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const center = [44.417, 11.903];
 
-// 1. Mock aggiornato con ARRAY di immagini
 const cantieriMock = [
   {
     id: 1,
@@ -27,7 +26,7 @@ const cantieriMock = [
     anno: 2023,
     costo: "€250.000",
     desc: "Ristrutturazione completa e cappotto termico.",
-    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
+    images: ["/cantieri/wip.jpg"],
   },
   {
     id: 2,
@@ -37,7 +36,7 @@ const cantieriMock = [
     anno: 2022,
     costo: "€450.000",
     desc: "Nuova costruzione con pannelli solari integrati.",
-    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
+    images: [],
   },
 ];
 
@@ -46,6 +45,10 @@ const Carousel = ({ images }) => {
   const imageRefs = useRef([]);
   const prevIndex = useRef(0);
   const direction = useRef(1);
+
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
+  const minSwipeDistance = 50;
 
   const nextSlide = () => {
     direction.current = 1;
@@ -61,6 +64,28 @@ const Carousel = ({ images }) => {
     if (idx === currentIndex) return;
     direction.current = idx > currentIndex ? 1 : -1;
     setCurrentIndex(idx);
+  };
+
+  const onTouchStart = (e) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
   };
 
   useEffect(() => {
@@ -90,22 +115,22 @@ const Carousel = ({ images }) => {
     gsap.set(oldImg, { zIndex: 5 });
 
     gsap.to(oldImg, {
-      scale: 0.9,
+      scale: 0.5,
       opacity: 0,
       xPercent: dir * -50,
-      duration: 0.5,
-      ease: "fade",
+      duration: 0.4,
+      ease: "power2.in",
     });
 
     gsap.fromTo(
       newImg,
-      { scale: 0.8, opacity: 0, xPercent: dir * 50 },
+      { scale: 0.5, opacity: 0, xPercent: dir * 50 },
       {
         scale: 1,
         opacity: 1,
         xPercent: 0,
-        duration: 0.6,
-        ease: "power2.out",
+        duration: 0.8,
+        ease: "bounce.out",
       },
     );
 
@@ -120,14 +145,19 @@ const Carousel = ({ images }) => {
     );
 
   return (
-    <div className="relative w-full h-48 md:h-64 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden group">
+    <div
+      className="relative w-full h-48 md:h-64 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden group touch-pan-y"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {images.map((img, index) => (
         <img
           key={index}
           ref={(el) => (imageRefs.current[index] = el)}
           src={`${import.meta.env.BASE_URL}${img.replace(/^\//, "")}`}
           alt={`Cantiere foto ${index + 1}`}
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-0"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-0 pointer-events-none"
         />
       ))}
 
@@ -138,7 +168,7 @@ const Carousel = ({ images }) => {
               e.stopPropagation();
               prevSlide();
             }}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white w-8 h-8 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
           >
             &#8592;
           </button>
@@ -148,12 +178,12 @@ const Carousel = ({ images }) => {
               e.stopPropagation();
               nextSlide();
             }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white w-8 h-8 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
           >
             &#8594;
           </button>
 
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
             {images.map((_, idx) => (
               <button
                 key={idx}
@@ -163,8 +193,8 @@ const Carousel = ({ images }) => {
                 }}
                 className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                   idx === currentIndex
-                    ? "bg-white scale-125"
-                    : "bg-white/50 hover:bg-white/80"
+                    ? "bg-white scale-125 shadow-sm"
+                    : "bg-white/50 hover:bg-white/90"
                 }`}
                 aria-label={`Vai alla foto ${idx + 1}`}
               />
@@ -181,6 +211,15 @@ export default function Cantieri() {
 
   const modalRef = useRef(null);
   const overlayRef = useRef(null);
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      pageRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+    );
+  }, []);
 
   useEffect(() => {
     if (selectedCantiere && modalRef.current && overlayRef.current) {
@@ -214,7 +253,7 @@ export default function Cantieri() {
   };
 
   return (
-    <div className="p-6 md:p-12">
+    <div className="p-6 md:p-12" ref={pageRef}>
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white transition-colors">
         I Nostri Cantieri
       </h1>
@@ -244,16 +283,16 @@ export default function Cantieri() {
         {selectedCantiere && (
           <div
             ref={overlayRef}
-            className="absolute top-0 left-0 w-full h-full bg-black/60 flex justify-center items-center p-4 z-10"
+            className="absolute top-0 left-0 w-full h-full bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-10"
             onClick={closeModal}
           >
             <div
               ref={modalRef}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl max-w-lg w-full relative shadow-2xl transition-colors duration-300 flex flex-col gap-4"
+              className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/20 dark:border-slate-600/30 p-6 md:p-8 rounded-2xl max-w-lg w-full relative shadow-2xl transition-colors duration-300 flex flex-col gap-4"
             >
               <button
-                className="absolute top-4 right-4 bg-gray-100 dark:bg-slate-700 w-8 h-8 rounded-full text-gray-500 hover:text-black dark:hover:text-white font-bold flex items-center justify-center transition"
+                className="absolute top-4 right-4 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 w-8 h-8 rounded-full text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-bold flex items-center justify-center transition"
                 onClick={closeModal}
               >
                 ✕
@@ -264,10 +303,10 @@ export default function Cantieri() {
                   {selectedCantiere.titolo}
                 </h2>
                 <div className="flex gap-4 text-sm text-gray-600 dark:text-slate-400 mb-2">
-                  <span className="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">
+                  <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
                     📅 {selectedCantiere.anno}
                   </span>
-                  <span className="bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded">
+                  <span className="bg-black/5 dark:bg-white/10 px-2 py-1 rounded">
                     💰 {selectedCantiere.costo}
                   </span>
                 </div>
@@ -286,7 +325,7 @@ export default function Cantieri() {
       <div className="mt-12 text-center">
         <Link
           to="/contatti"
-          className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+          className="px-8 py-4 bg-blue-600/90 backdrop-blur-md text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-lg shadow-blue-600/20"
         >
           Hai un progetto? Contattaci
         </Link>
