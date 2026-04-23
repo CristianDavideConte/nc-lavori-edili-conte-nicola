@@ -26,7 +26,7 @@ const cantieriMock = [
     anno: 2023,
     costo: "€250.000",
     desc: "Ristrutturazione completa e cappotto termico.",
-    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
+    images: ["/cantieri/wip.jpg"],
   },
   {
     id: 2,
@@ -91,7 +91,6 @@ const Carousel = ({ images }) => {
   useEffect(() => {
     if (!images || images.length === 0) return;
 
-    // Se c'è 1 sola immagine, O se è il primissimo render, la rendiamo visibile senza animazione
     if (images.length === 1 || currentIndex === prevIndex.current) {
       gsap.set(imageRefs.current, {
         opacity: 0,
@@ -207,6 +206,7 @@ const Carousel = ({ images }) => {
     </div>
   );
 };
+
 export default function Cantieri() {
   const [selectedCantiere, setSelectedCantiere] = useState(null);
   const [isMapActive, setIsMapActive] = useState(false);
@@ -214,6 +214,15 @@ export default function Cantieri() {
   const modalRef = useRef(null);
   const overlayRef = useRef(null);
   const mapContainerRef = useRef(null);
+  const pageRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      pageRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+    );
+  }, []);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -278,7 +287,7 @@ export default function Cantieri() {
   };
 
   return (
-    <div className="p-4 md:p-12">
+    <div className="p-4 md:p-12 opacity-0" ref={pageRef}>
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-white transition-colors">
         I Nostri Cantieri
       </h1>
