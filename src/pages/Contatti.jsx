@@ -28,7 +28,7 @@ export default function Contatti() {
             y: 0,
             scale: 1,
             stagger: 0.08,
-            duration: 0.3,
+            duration: 0.4,
             ease: "back.out(1.2)",
           },
           "-=0.2",
@@ -40,7 +40,7 @@ export default function Contatti() {
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-[70vh] p-6 text-center"
+      className="flex flex-col items-center justify-center min-h-[70vh] p-4 md:p-6 text-center"
       ref={containerRef}
     >
       <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white transition-colors opacity-0">
@@ -52,47 +52,54 @@ export default function Contatti() {
         il metodo che preferisci per contattarci.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl justify-center">
+      {/* - items-stretch forza tutte le card ad avere la stessa altezza
+          - md:flex-row mantiene l'orizzontale su desktop
+          - flex-col lo mette in verticale su mobile
+      */}
+      <div className="flex flex-col md:flex-row gap-4 lg:gap-6 w-full max-w-5xl justify-center items-stretch">
+        {/* Card Telefono */}
         <a
           ref={(el) => (cardsRef.current[0] = el)}
           href="tel:+393336477943"
-          className="flex-1 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0"
+          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
         >
           <div className="text-3xl mb-3">📞</div>
           <div className="font-bold text-gray-900 dark:text-white mb-1">
             Telefono
           </div>
-          <div className="text-blue-600 dark:text-blue-400 font-medium">
+          <div className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-sm lg:text-base">
             +39 333 647 7943
           </div>
         </a>
 
+        {/* Card WhatsApp */}
         <a
           ref={(el) => (cardsRef.current[1] = el)}
           href="https://wa.me/393336477943"
           target="_blank"
           rel="noreferrer"
-          className="flex-1 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0"
+          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
         >
           <div className="text-3xl mb-3">💬</div>
           <div className="font-bold text-gray-900 dark:text-white mb-1">
             WhatsApp
           </div>
-          <div className="text-green-600 dark:text-green-400 font-medium">
+          <div className="text-green-600 dark:text-green-400 font-medium whitespace-nowrap text-sm lg:text-base">
             Scrivici subito
           </div>
         </a>
 
+        {/* Card Email */}
         <a
           ref={(el) => (cardsRef.current[2] = el)}
           href="mailto:nicolaconte999@gmail.com"
-          className="flex-1 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0"
+          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
         >
           <div className="text-3xl mb-3">✉️</div>
           <div className="font-bold text-gray-900 dark:text-white mb-1">
             Email
           </div>
-          <div className="text-red-600 dark:text-red-400 font-medium">
+          <div className="text-red-600 dark:text-red-400 font-medium whitespace-nowrap text-sm lg:text-base">
             nicolaconte999@gmail.com
           </div>
         </a>
