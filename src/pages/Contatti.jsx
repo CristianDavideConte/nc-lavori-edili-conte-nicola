@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 export default function Contatti() {
@@ -52,12 +52,7 @@ export default function Contatti() {
         il metodo che preferisci per contattarci.
       </p>
 
-      {/* - items-stretch forza tutte le card ad avere la stessa altezza
-          - md:flex-row mantiene l'orizzontale su desktop
-          - flex-col lo mette in verticale su mobile
-      */}
       <div className="flex flex-col md:flex-row gap-4 lg:gap-6 w-full max-w-5xl justify-center items-stretch">
-        {/* Card Telefono */}
         <a
           ref={(el) => (cardsRef.current[0] = el)}
           href="tel:+393336477943"
@@ -68,11 +63,10 @@ export default function Contatti() {
             Telefono
           </div>
           <div className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-sm lg:text-base">
-            +39 333 647 7943
+            Chiamaci ora
           </div>
         </a>
 
-        {/* Card WhatsApp */}
         <a
           ref={(el) => (cardsRef.current[1] = el)}
           href="https://wa.me/393336477943"
@@ -89,7 +83,6 @@ export default function Contatti() {
           </div>
         </a>
 
-        {/* Card Email */}
         <a
           ref={(el) => (cardsRef.current[2] = el)}
           href="mailto:nicolaconte999@gmail.com"
@@ -100,7 +93,7 @@ export default function Contatti() {
             Email
           </div>
           <div className="text-red-600 dark:text-red-400 font-medium whitespace-nowrap text-sm lg:text-base">
-            nicolaconte999@gmail.com
+            Mandaci una mail
           </div>
         </a>
       </div>

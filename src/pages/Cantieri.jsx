@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import L from "leaflet";
-import CantiereModal from "../components/CantiereModal";
+import Bento from "../components/Bento";
 import "leaflet/dist/leaflet.css";
 
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -16,31 +16,31 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const cantieriMock = [
+const projectsMock = [
   {
     id: 1,
     lat: 44.4172,
     lng: 11.9033,
-    titolo: "Villa Residenziale",
-    anno: 2023,
-    costo: "€250.000",
-    desc: "Ristrutturazione completa e cappotto termico.",
+    title: "Villa Residenziale",
+    year: 2023,
+    cost: "€250.000",
+    description: "Ristrutturazione completa e cappotto termico.",
     images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
   },
   {
     id: 2,
     lat: 44.38,
     lng: 11.92,
-    titolo: "Capannone Industriale",
-    anno: 2022,
-    costo: "€450.000",
-    desc: "Nuova costruzione con pannelli solari integrati.",
+    title: "Capannone Industriale",
+    year: 2022,
+    cost: "€450.000",
+    description: "Nuova costruzione con pannelli solari integrati.",
     images: [],
   },
 ];
 
 export default function Cantieri() {
-  const [selectedCantiere, setSelectedCantiere] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isMapActive, setIsMapActive] = useState(false);
   const mapContainerRef = useRef(null);
   const pageRef = useRef(null);
@@ -55,7 +55,7 @@ export default function Cantieri() {
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (selectedCantiere) return;
+      if (selectedProject) return;
       if (
         mapContainerRef.current &&
         !mapContainerRef.current.contains(e.target)
@@ -71,7 +71,7 @@ export default function Cantieri() {
       document.removeEventListener("mousedown", handleOutsideClick);
       document.removeEventListener("touchstart", handleOutsideClick);
     };
-  }, [isMapActive, selectedCantiere]);
+  }, [isMapActive, selectedProject]);
 
   return (
     <div className="p-4 md:p-12 opacity-0" ref={pageRef}>
@@ -83,7 +83,6 @@ export default function Cantieri() {
         ref={mapContainerRef}
         className="relative shadow-xl rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 mx-auto max-w-6xl bg-gray-100 dark:bg-slate-800"
       >
-        {/* Overlay Mappa (stessa logica di prima) */}
         {!isMapActive && L.Browser.mobile && (
           <div
             className="absolute inset-0 z-[20] bg-white/10 dark:bg-slate-900/10 backdrop-blur-[2px] flex items-center justify-center cursor-pointer"
@@ -114,11 +113,11 @@ export default function Cantieri() {
             className="h-full w-full"
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {cantieriMock.map((cantiere) => (
+            {projectsMock.map((project) => (
               <Marker
-                key={cantiere.id}
-                position={[cantiere.lat, cantiere.lng]}
-                eventHandlers={{ click: () => setSelectedCantiere(cantiere) }}
+                key={project.id}
+                position={[project.lat, project.lng]}
+                eventHandlers={{ click: () => setSelectedProject(project) }}
               />
             ))}
           </MapContainer>
@@ -134,10 +133,9 @@ export default function Cantieri() {
         </Link>
       </div>
 
-      {/* Il modale ora è un componente pulito */}
-      <CantiereModal
-        cantiere={selectedCantiere}
-        onClose={() => setSelectedCantiere(null)}
+      <Bento
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
       />
     </div>
   );
