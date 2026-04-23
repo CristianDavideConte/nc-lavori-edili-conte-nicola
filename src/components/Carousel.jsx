@@ -39,14 +39,8 @@ export default function Carousel({ images }) {
   const onTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const distance = touchStartX.current - touchEndX.current;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      nextSlide();
-    } else if (isRightSwipe) {
-      prevSlide();
-    }
+    if (distance > minSwipeDistance) nextSlide();
+    else if (distance < -minSwipeDistance) prevSlide();
   };
 
   useEffect(() => {
@@ -83,17 +77,10 @@ export default function Carousel({ images }) {
       duration: 0.3,
       ease: "power3.in",
     });
-
     gsap.fromTo(
       newImg,
       { scale: 1.4, opacity: 0, xPercent: dir * 50 },
-      {
-        scale: 1,
-        opacity: 1,
-        xPercent: 0,
-        duration: 0.6,
-        ease: "power3.out",
-      },
+      { scale: 1, opacity: 1, xPercent: 0, duration: 0.6, ease: "power3.out" },
     );
 
     prevIndex.current = currentIndex;
@@ -101,14 +88,14 @@ export default function Carousel({ images }) {
 
   if (!images || images.length === 0)
     return (
-      <div className="h-48 bg-gray-200 dark:bg-slate-700 rounded flex items-center justify-center">
+      <div className="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
         Nessuna foto
       </div>
     );
 
   return (
     <div
-      className="relative w-full h-48 md:h-64 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden group touch-pan-y"
+      className="relative w-full h-full bg-slate-100 dark:bg-slate-900 overflow-hidden group touch-pan-y"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -118,7 +105,7 @@ export default function Carousel({ images }) {
           key={index}
           ref={(el) => (imageRefs.current[index] = el)}
           src={`${import.meta.env.BASE_URL}${img.replace(/^\//, "")}`}
-          alt={`Cantiere foto ${index + 1}`}
+          alt={`Project photo ${index + 1}`}
           className="absolute top-0 left-0 w-full h-full object-cover opacity-0 pointer-events-none"
         />
       ))}
@@ -130,9 +117,9 @@ export default function Carousel({ images }) {
               e.stopPropagation();
               prevSlide();
             }}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white w-8 h-8 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 backdrop-blur-md text-white w-10 h-10 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
           >
-            &#8592;
+            ←
           </button>
 
           <button
@@ -140,12 +127,12 @@ export default function Carousel({ images }) {
               e.stopPropagation();
               nextSlide();
             }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-md text-white w-8 h-8 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 backdrop-blur-md text-white w-10 h-10 rounded-full opacity-0 md:group-hover:opacity-100 transition pointer-events-auto flex items-center justify-center border border-white/20 shadow-sm"
           >
-            &#8594;
+            →
           </button>
 
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 pointer-events-auto bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
             {images.map((_, idx) => (
               <button
                 key={idx}
@@ -153,12 +140,7 @@ export default function Carousel({ images }) {
                   e.stopPropagation();
                   goToSlide(idx);
                 }}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  idx === currentIndex
-                    ? "bg-white scale-125 shadow-sm"
-                    : "bg-white/50 hover:bg-white/90"
-                }`}
-                aria-label={`Vai alla foto ${idx + 1}`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === currentIndex ? "bg-white scale-125" : "bg-white/40"}`}
               />
             ))}
           </div>

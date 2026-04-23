@@ -19,7 +19,7 @@ export default function Bento({ project, onClose }) {
         { opacity: 1, duration: 0.3 },
       ).fromTo(
         gridRef.current.children,
-        { opacity: 0, y: 20, scale: 0.95 },
+        { opacity: 0, y: 20, scale: 0.75 },
         {
           opacity: 1,
           y: 0,
@@ -64,12 +64,12 @@ export default function Bento({ project, onClose }) {
           ✕
         </button>
 
-        <div className="flex-1 overflow-y-auto no-scrollbar relative p-0">
+        <div className="flex-1 overflow-y-auto no-scrollbar relative">
           <div
             ref={gridRef}
-            className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 min-h-full md:h-full"
+            className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-full"
           >
-            <div className="md:col-span-2 md:row-span-2 bg-slate-50 dark:bg-slate-800 rounded-[2.5rem] overflow-hidden h-[55vh] md:h-full min-h-[350px]">
+            <div className="md:col-span-2 md:row-span-2 bg-slate-50 dark:bg-slate-800 rounded-[2.5rem] overflow-hidden min-h-[50vh] md:h-full">
               <Carousel images={project.images} />
             </div>
 

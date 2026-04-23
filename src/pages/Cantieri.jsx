@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
