@@ -1,102 +1,213 @@
-import { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import BentoCard from "../components/BentoCard";
+
+// Icone SVG Minimali
+const PhoneIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+  </svg>
+);
+const MessageIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
+  </svg>
+);
+const MailIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
+);
 
 export default function Contatti() {
-  const containerRef = useRef(null);
-  const cardsRef = useRef([]);
+  const pageRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const gridRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
-      tl.fromTo(
-        containerRef.current.children[0],
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
-      )
+      // Animiamo il contenitore principale
+      tl.to(pageRef.current, { autoAlpha: 1, duration: 0.4 })
+
+        // Animazione Titoli (Sinistra)
         .fromTo(
-          containerRef.current.children[1],
-          { opacity: 0 },
-          { opacity: 1, duration: 0.6 },
-          "-=0.3",
-        )
-        .fromTo(
-          cardsRef.current,
-          { opacity: 0, y: 40, scale: 0.6 },
+          heroContentRef.current.children,
+          { y: 30, autoAlpha: 0 },
           {
-            opacity: 1,
             y: 0,
-            scale: 1,
-            stagger: 0.06,
-            duration: 0.3,
-            ease: "back.out(1.2)",
+            autoAlpha: 1,
+            duration: 0.4,
+            stagger: 0.09,
+            ease: "power3.out",
           },
           "-=0.2",
+        )
+
+        // Animazione Bento (Destra) - Stile "I Nostri Lavori"
+        .fromTo(
+          gridRef.current.children,
+          { y: 40, scale: 0.95, autoAlpha: 0 },
+          {
+            y: 0,
+            scale: 1,
+            autoAlpha: 1,
+            duration: 0.3,
+            stagger: 0.07,
+            ease: "back.out(1.2)",
+          },
+          "-=0.5",
         );
-    }, containerRef);
+    }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
+    // visibility: 'hidden' previene il flash iniziale prima che JS parta
     <div
-      className="flex flex-col items-center justify-center min-h-[70vh] p-4 md:p-6 text-center"
-      ref={containerRef}
+      ref={pageRef}
+      className="bg-white dark:bg-slate-950 overflow-x-hidden min-h-screen"
+      style={{ visibility: "hidden" }}
     >
-      <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white transition-colors opacity-0">
-        Parliamo del tuo progetto
-      </h1>
+      {/* Hero Section - Allineamento millimetrico alla Home */}
+      <section className="relative min-h-[90vh] flex items-center pt-24 pb-24 lg:py-0 px-6 overflow-visible">
+        <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          {/* Colonna Testo */}
+          <div ref={heroContentRef} className="w-full lg:flex-1 text-left z-20">
+            <h1 className="text-sm uppercase tracking-[0.3em] font-bold text-blue-600 mb-6">
+              N.C. Lavori Edili — Lugo
+            </h1>
+            <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter">
+              Mettiamoci <br /> in contatto.
+            </h2>
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-lg mb-10 leading-relaxed font-medium">
+              Esperti in ristrutturazioni e nuove costruzioni in tutta la
+              Romagna. Contattaci per un preventivo gratuito.
+            </p>
+          </div>
 
-      <p className="text-lg text-gray-600 dark:text-slate-400 mb-10 max-w-xl transition-colors opacity-0">
-        Siamo a tua disposizione per preventivi gratuiti e sopralluoghi. Scegli
-        il metodo che preferisci per contattarci.
-      </p>
+          {/* Colonna Bento Grid */}
+          <div className="w-full lg:flex-[1.2] relative mt-10 lg:mt-0">
+            {/* Altezza minima forzata a 520px per centrare il titolo come in Home */}
+            <div
+              ref={gridRef}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:min-h-[520px] content-center"
+            >
+              <BentoCard
+                href="tel:+393336777943"
+                className="border-blue-100 dark:border-blue-900/20"
+                bg="bg-white dark:bg-slate-900"
+              >
+                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-600 mb-4">
+                  <PhoneIcon />
+                </div>
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">
+                  Telefono
+                </p>
+                <h3 className="text-xl font-black text-blue-600 tracking-tight leading-none">
+                  Chiamaci ora
+                </h3>
+              </BentoCard>
 
-      <div className="flex flex-col md:flex-row gap-4 lg:gap-6 w-full max-w-5xl justify-center items-stretch">
-        <a
-          ref={(el) => (cardsRef.current[0] = el)}
-          href="tel:+393336477943"
-          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
-        >
-          <div className="text-3xl mb-3">📞</div>
-          <div className="font-bold text-gray-900 dark:text-white mb-1">
-            Telefono
-          </div>
-          <div className="text-blue-600 dark:text-blue-400 font-medium whitespace-nowrap text-sm lg:text-base">
-            Chiamaci ora
-          </div>
-        </a>
+              <BentoCard
+                href="https://wa.me/393336777943"
+                className="border-green-100 dark:border-green-900/20"
+                bg="bg-white dark:bg-slate-900"
+              >
+                <div className="w-12 h-12 bg-green-50 dark:bg-[#25D366]/10 rounded-2xl flex items-center justify-center text-[#25D366] mb-4">
+                  <MessageIcon />
+                </div>
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">
+                  WhatsApp
+                </p>
+                <h3 className="text-xl font-black text-[#25D366] tracking-tight leading-none">
+                  Chat Rapida
+                </h3>
+              </BentoCard>
 
-        <a
-          ref={(el) => (cardsRef.current[1] = el)}
-          href="https://wa.me/393336477943"
-          target="_blank"
-          rel="noreferrer"
-          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
-        >
-          <div className="text-3xl mb-3">💬</div>
-          <div className="font-bold text-gray-900 dark:text-white mb-1">
-            WhatsApp
-          </div>
-          <div className="text-green-600 dark:text-green-400 font-medium whitespace-nowrap text-sm lg:text-base">
-            Scrivici subito
-          </div>
-        </a>
+              <BentoCard
+                href="mailto:nicolaconte999@gmail.com"
+                className="sm:col-span-2 border-red-100 dark:border-red-900/20"
+                bg="bg-white dark:bg-slate-900"
+              >
+                <div className="w-12 h-12 bg-red-50 dark:bg-red-600/10 rounded-2xl flex items-center justify-center text-red-500 mb-4">
+                  <MailIcon />
+                </div>
+                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">
+                  Email
+                </p>
+                <h3 className="text-lg font-black text-red-500 break-all leading-tight">
+                  Mandaci un'email
+                </h3>
+              </BentoCard>
 
-        <a
-          ref={(el) => (cardsRef.current[2] = el)}
-          href="mailto:nicolaconte999@gmail.com"
-          className="flex-1 min-w-0 p-6 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-gray-200/50 dark:border-slate-700/50 rounded-2xl hover:bg-white dark:hover:bg-slate-800 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl opacity-0 flex flex-col items-center justify-center"
-        >
-          <div className="text-3xl mb-3">✉️</div>
-          <div className="font-bold text-gray-900 dark:text-white mb-1">
-            Email
+              <BentoCard
+                className="sm:col-span-2"
+                bg="bg-slate-50 dark:bg-slate-900/50"
+              >
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h4 className="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-2">
+                      Orari
+                    </h4>
+                    <p className="text-slate-900 dark:text-white font-black text-2xl tracking-tighter leading-none">
+                      Lun — Ven
+                    </p>
+                    <p className="text-slate-500 font-bold text-lg italic mt-1 leading-none">
+                      08:00 - 18:30
+                    </p>
+                  </div>
+                  <div className="sm:text-right border-t sm:border-t-0 border-slate-200 dark:border-slate-800 pt-4 sm:pt-0 w-full sm:w-auto">
+                    <p className="text-slate-900 dark:text-white font-black text-2xl tracking-tighter leading-none">
+                      Sabato
+                    </p>
+                    <p className="text-blue-600 text-xs font-bold uppercase mt-1">
+                      Su Appuntamento
+                    </p>
+                  </div>
+                </div>
+              </BentoCard>
+            </div>
           </div>
-          <div className="text-red-600 dark:text-red-400 font-medium whitespace-nowrap text-sm lg:text-base">
-            Mandaci una mail
-          </div>
-        </a>
-      </div>
+        </div>
+      </section>
+
+      <footer className="py-12 text-center opacity-30 text-[10px] uppercase font-bold tracking-[0.4em] text-slate-500">
+        N.C. Lavori Edili di Nicola Conte — P.IVA 0123456789
+      </footer>
     </div>
   );
 }
