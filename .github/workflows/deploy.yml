@@ -1,19 +1,16 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger del deploy ogni volta che fai push sul branch main
   push:
-    branches: ['main'] # NOTA: se il tuo branch si chiama 'master', cambia 'main' in 'master'
+    branches: ["main"]
 
-# Permessi necessari per GitHub Actions per scrivere sulle Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Permette un solo deploy alla volta (evita conflitti se fai due push veloci)
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -30,22 +27,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
-      - name: Installa le dipendenze
+      - name: Install dependencies
         run: npm install
 
-      - name: Compila il progetto (Vite Build)
+      - name: Compile the project (Vite Build)
         run: npm run build
 
-      - name: Configura GitHub Pages
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v4
 
-      - name: Carica l'artefatto (cartella dist)
+      - name: Upload artifact (dist folder)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: "./dist"
 
-      - name: Esegui il Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
