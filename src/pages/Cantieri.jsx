@@ -3,7 +3,7 @@ import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { Link } from "react-router-dom";
 
 const mapContainerStyle = { width: "100%", height: "600px" };
-const center = { lat: 44.417, lng: 11.903 }; // Centrato vicino a Lugo
+const center = { lat: 44.417, lng: 11.903 };
 
 const cantieriMock = [
   {
@@ -16,7 +16,7 @@ const cantieriMock = [
     desc: "Ristrutturazione completa e cappotto termico.",
     img: "link-img.jpg",
   },
-  // Aggiungi altri cantieri qui
+  // TODO: new worksites
 ];
 
 export default function Cantieri() {

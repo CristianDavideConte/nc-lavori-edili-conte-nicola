@@ -7,7 +7,6 @@ export default function Home() {
   const descRef = useRef(null);
 
   useEffect(() => {
-    // GSAP Animation all'avvio
     gsap.fromTo(
       heroRef.current,
       { opacity: 0, y: 50 },
@@ -21,15 +20,14 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero Section */}
       <section
-        className="h-screen flex flex-col justify-center items-center text-center p-4 bg-gray-50"
+        className="h-screen flex flex-col justify-center items-center text-center p-4 bg-gray-50 dark:bg-slate-900 transition-colors duration-300"
         ref={heroRef}
       >
         <h1 className="text-5xl md:text-7xl font-extrabold mb-6">
           N.C Lavori Edili
         </h1>
-        <p className="text-xl md:text-2xl mb-10 text-gray-600">
+        <p className="text-xl md:text-2xl mb-10 text-gray-600 dark:text-slate-400">
           Costruiamo il futuro, con fondamenta solide.
         </p>
         <button
@@ -40,17 +38,18 @@ export default function Home() {
         </button>
       </section>
 
-      {/* Descrizione Azienda */}
       <section
         className="min-h-screen py-20 px-6 md:px-20 max-w-5xl mx-auto flex flex-col justify-center"
         ref={descRef}
       >
         <h2 className="text-3xl font-bold mb-6">La Nostra Storia</h2>
-        <div className="text-lg leading-relaxed mb-12 space-y-4">
+        <div className="text-lg leading-relaxed mb-12 space-y-4 text-gray-700 dark:text-slate-300">
           <p>
             Fondata con la passione per il mattone e l'innovazione,{" "}
-            <strong>N.C Lavori Edili</strong> opera sul territorio nazionale
-            garantendo qualità e sicurezza.
+            <strong className="text-black dark:text-white">
+              N.C Lavori Edili
+            </strong>{" "}
+            opera sul territorio nazionale garantendo qualità e sicurezza.
           </p>
           <p>
             Siamo specializzati in ristrutturazioni chiavi in mano, nuove
@@ -58,11 +57,10 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Call to Actions */}
         <div className="flex flex-col sm:flex-row gap-6 mt-8">
           <Link
             to="/cantieri"
-            className="px-8 py-4 bg-gray-900 text-white text-center font-semibold rounded-lg hover:bg-gray-800 transition"
+            className="px-8 py-4 bg-gray-900 dark:bg-slate-800 text-white text-center font-semibold rounded-lg hover:bg-gray-800 dark:hover:bg-slate-700 transition"
           >
             Esplora i nostri cantieri
           </Link>

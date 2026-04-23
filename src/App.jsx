@@ -8,23 +8,31 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen font-sans text-gray-800">
-        <nav className="p-6 flex justify-between items-center bg-white shadow-md fixed w-full z-50">
+      <div className="flex flex-col min-h-screen font-sans text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 transition-colors duration-300">
+        <nav className="p-6 flex justify-between items-center bg-white dark:bg-slate-900 shadow-md fixed w-full z-50 transition-colors duration-300">
           <div className="text-xl font-bold">N.C Lavori Edili</div>
           <div className="flex gap-4">
-            <Link to="/" className="hover:text-blue-600 font-medium">
+            <Link
+              to="/"
+              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+            >
               Chi Siamo
             </Link>
-            <Link to="/cantieri" className="hover:text-blue-600 font-medium">
+            <Link
+              to="/cantieri"
+              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+            >
               I Nostri Cantieri
             </Link>
-            <Link to="/contatti" className="hover:text-blue-600 font-medium">
+            <Link
+              to="/contatti"
+              className="hover:text-blue-600 dark:hover:text-blue-400 font-medium"
+            >
               Contattaci
             </Link>
           </div>
         </nav>
 
-        {/* Padding top per compensare la navbar fissa */}
         <main className="flex-grow pt-20">
           <Routes>
             <Route path="/" element={<Home />} />
