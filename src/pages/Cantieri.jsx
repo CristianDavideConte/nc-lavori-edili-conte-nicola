@@ -1,32 +1,24 @@
-import React, { useLayoutEffect, useRef, useState, useEffect } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
-// 1. IMPORTANTE: Questo deve essere presente per dare altezza alla mappa
 import "leaflet/dist/leaflet.css";
 import gsap from "gsap";
-import BentoCard from "../components/BentoCard";
 import Bento from "../components/Bento";
 
 const customIcon = new L.DivIcon({
   className: "custom-div-icon",
-  html: "<div style='background-color: #2563eb; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3); cursor: pointer;'></div>",
+  html: "<div style='background-color: #2563eb; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;'></div>",
   iconSize: [14, 14],
   iconAnchor: [7, 7],
 });
 
-// 2. Fix fondamentale: forza la mappa a ricalcolare le dimensioni
 function MapResizer() {
   const map = useMap();
   useEffect(() => {
-    // Ricalcola la dimensione ogni volta che il browser cambia risoluzione
     const timer = setTimeout(() => {
       map.invalidateSize();
     }, 500);
-    window.addEventListener("resize", () => map.invalidateSize());
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", () => map.invalidateSize());
-    };
+    return () => clearTimeout(timer);
   }, [map]);
   return null;
 }
@@ -41,52 +33,61 @@ export default function Cantieri() {
     {
       id: 1,
       position: [44.42, 11.91],
-      title: "Villa Storica",
+      title: "Ristrutturazione Villa",
       city: "Lugo",
-      category: "Ristrutturazione",
+      category: "Residenziale",
       cost: "€€€",
-      description: "Restauro conservativo.",
+      description: "Intervento di restyling completo.",
     },
     {
       id: 2,
       position: [41.89, 12.49],
-      title: "Attico Roma",
+      title: "Attico Design",
       city: "Roma",
       category: "Lusso",
       cost: "€€€€",
-      description: "Design moderno.",
+      description: "Finiture di pregio in centro.",
     },
     {
       id: 3,
       position: [45.46, 9.19],
-      title: "Uffici Milano",
+      title: "Uffici Pro",
       city: "Milano",
-      category: "Industriale",
+      category: "Business",
       cost: "€€€",
-      description: "Sede aziendale.",
+      description: "Sede aziendale moderna.",
     },
   ];
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
-      tl.to(pageRef.current, { autoAlpha: 1, duration: 0.4 })
-        .fromTo(
+      gsap.set([heroContentRef.current.children, mapWrapperRef.current], {
+        opacity: 0,
+        y: 30,
+      });
+
+      tl.to(pageRef.current, { autoAlpha: 1, duration: 0.5 })
+        .to(
           heroContentRef.current.children,
-          { y: 30, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            stagger: 0.15,
+            duration: 0.6,
+            stagger: 0.07,
             ease: "power3.out",
           },
           "-=0.2",
         )
-        .fromTo(
+        .to(
           mapWrapperRef.current,
-          { y: 40, scale: 0.9, opacity: 0 },
-          { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.2)" },
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: "back.out(1.2)",
+          },
           "-=0.5",
         );
     }, pageRef);
@@ -99,28 +100,27 @@ export default function Cantieri() {
       className="bg-white dark:bg-slate-950 min-h-screen"
       style={{ visibility: "hidden" }}
     >
-      <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-16 lg:py-0 px-6">
+      <section className="relative min-h-[90vh] flex items-center pt-24 pb-24 lg:py-0 px-6">
         <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div ref={heroContentRef} className="w-full lg:flex-1 text-left z-20">
             <h1 className="text-sm uppercase tracking-[0.3em] font-bold text-blue-600 mb-6">
               I nostri lavori — Italia
             </h1>
-            <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter uppercase">
+            <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter">
               Qualità in <br /> ogni città.
             </h2>
             <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed font-medium">
-              Ogni punto sulla mappa indica un progetto completato. Clicca sulle
-              posizioni per scoprire i dettagli del lavoro.
+              Ogni punto sulla mappa indica un progetto che abbiamo portato a
+              termine. Clicca sulle posizioni per scoprire i dettagli del
+              lavoro.
             </p>
           </div>
 
-          <div ref={mapWrapperRef} className="w-full lg:flex-[1.5] relative">
-            {/* 3. ALTEZZA FISSA: Cruciale per evitare altezza 0 su mobile */}
-            <div className="w-full h-[450px] md:h-[550px] lg:h-[600px] relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 bg-slate-100">
-              {/* Placeholder WIP visibile se la mappa non carica */}
+          <div ref={mapWrapperRef} className="w-full lg:flex-[1.4] relative">
+            <div className="w-full h-[450px] md:h-[550px] lg:h-[600px] relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 bg-slate-100 dark:bg-slate-900">
               <img
                 src="cantieri/wip.jpg"
-                className="absolute inset-0 w-full h-full object-cover opacity-10"
+                className="absolute inset-0 w-full h-full object-cover opacity-10 grayscale"
                 alt=""
               />
 
@@ -129,7 +129,12 @@ export default function Cantieri() {
                 zoom={5}
                 scrollWheelZoom={false}
                 zoomControl={false}
-                style={{ height: "100%", width: "100%" }} // Forza l'altezza al 100% del div genitore
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  position: "absolute",
+                  inset: 0,
+                }}
               >
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
                 <MapResizer />
