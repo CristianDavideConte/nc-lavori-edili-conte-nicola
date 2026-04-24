@@ -1,3 +1,5 @@
+import L from "leaflet";
+
 export const PhoneIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -111,6 +113,14 @@ export const LocationIcon = () => (
     <circle cx="12" cy="10" r="3" />
   </svg>
 );
+
+export const MapPositionIcon = () =>
+  new L.DivIcon({
+    className: "custom-div-icon",
+    html: "<div style='background-color: #2563eb; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;'></div>",
+    iconSize: [14, 14],
+    iconAnchor: [7, 7],
+  });
 
 export const RistrutturazioniIcon = () => (
   <svg

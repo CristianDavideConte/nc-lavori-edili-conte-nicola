@@ -57,7 +57,6 @@ export default function Bento({ project, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-auto md:auto-rows-[minmax(320px,_auto)]">
-          {/* Card Immagini (Carousel) */}
           <BentoCard
             className="md:col-span-2 md:row-span-2 min-h-[350px] md:min-h-[450px]"
             noPadding
@@ -67,46 +66,56 @@ export default function Bento({ project, onClose }) {
           </BentoCard>
 
           <BentoCard
-            className="md:col-span-2 min-h-[250px] md:min-h-[300px] text-white justify-center"
+            className="md:col-span-2 min-h-[250px] md:min-h-[300px] text-white"
             bg="bg-blue-600"
           >
-            <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
-              {project.title}
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              <span className="bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
-                <CalendarIcon />
-                {project.year}
-              </span>
-              <span className="bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
-                <EuroIcon />
-                {project.cost}
-              </span>
+            <div className="flex flex-col justify-center h-full">
+              <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-tight mb-8 line-clamp-2 break-words">
+                {project.title}
+              </h2>
+
+              <div className="flex flex-wrap gap-3">
+                <span className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
+                  <CalendarIcon />
+                  <span>{project.year || "2024"}</span>
+                </span>
+
+                <span className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
+                  <EuroIcon />
+                  <span>{project.cost || "€€€"}</span>
+                </span>
+              </div>
             </div>
           </BentoCard>
 
-          <BentoCard bg="bg-white dark:bg-slate-800" className="justify-center">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
-              Dettagli
-            </p>
-            <p className="text-lg md:text-xl font-medium italic text-slate-700 dark:text-slate-200 leading-relaxed">
-              "{project.description}"
-            </p>
+          <BentoCard bg="bg-white dark:bg-slate-800">
+            <div className="flex flex-col justify-center h-full">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+                Dettagli
+              </p>
+              <p className="text-lg md:text-xl font-medium italic text-slate-700 dark:text-slate-200 leading-relaxed">
+                "{project.description}"
+              </p>
+            </div>
           </BentoCard>
 
           <BentoCard
-            className="text-center items-center justify-center min-h-[180px] md:min-h-[300px]"
+            className="min-h-[180px] md:min-h-[300px]"
             bg="bg-slate-50 dark:bg-slate-900/50"
           >
-            <div className="text-3xl md:text-4xl mb-4">
-              <LocationIcon />
+            <div className="flex flex-col items-center justify-center text-center h-full w-full">
+              <div className="text-3xl md:text-4xl mb-4 text-slate-700 dark:text-slate-300">
+                <LocationIcon />
+              </div>
+              <p className="font-black text-slate-900 dark:text-white uppercase text-base md:text-lg tracking-tighter">
+                {project.city || "Emilia-Romagna"}
+              </p>
+              {project.address && (
+                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mt-1">
+                  {project.address}
+                </p>
+              )}
             </div>
-            <p className="font-black text-slate-900 dark:text-white uppercase text-base md:text-lg tracking-tighter">
-              Emilia-Romagna
-            </p>
-            <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mt-1">
-              Sito Certificato
-            </p>
           </BentoCard>
         </div>
       </div>

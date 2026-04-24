@@ -1,0 +1,32 @@
+export const worksitesData = [
+  {
+    id: 1,
+    position: [44.42, 11.91],
+    title: "Ristrutturazione Villa",
+    city: "Lugo",
+    category: "Residenziale",
+    cost: "150.000",
+    description: "Intervento di restyling completo.",
+    address: "Via sottofiume, 2",
+  },
+  {
+    id: 2,
+    position: [41.89, 12.49],
+    title: "Attico Design",
+    city: "Roma",
+    category: "Lusso",
+    cost: "35.000",
+    description: "Finiture di pregio in centro.",
+    address: "Piazza del colosseo, 1",
+  },
+  {
+    id: 3,
+    position: [45.46, 9.19],
+    title: "Uffici Pro",
+    city: "Milano",
+    category: "Business",
+    cost: "200.000",
+    description: "Sede aziendale moderna.",
+    address: "Via Borse, 5",
+  },
+];

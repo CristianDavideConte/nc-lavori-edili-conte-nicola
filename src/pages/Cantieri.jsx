@@ -1,16 +1,10 @@
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import gsap from "gsap";
 import Bento from "../components/Bento";
-
-const customIcon = new L.DivIcon({
-  className: "custom-div-icon",
-  html: "<div style='background-color: #2563eb; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.2); cursor: pointer;'></div>",
-  iconSize: [14, 14],
-  iconAnchor: [7, 7],
-});
+import { worksitesData } from "../components/WorksitesData";
+import { MapPositionIcon } from "../components/Icons";
 
 function MapRefresher() {
   const map = useMap();
@@ -36,37 +30,6 @@ export default function Cantieri() {
   const heroContentRef = useRef(null);
   const mapWrapperRef = useRef(null);
   const [selectedProject, setSelectedProject] = useState(null);
-
-  const projectsData = [
-    {
-      id: 1,
-      position: [44.42, 11.91],
-      title: "Ristrutturazione Villa",
-      city: "Lugo",
-      category: "Residenziale",
-      cost: "€€€",
-      description: "Intervento di restyling completo.",
-    },
-    {
-      id: 2,
-      position: [41.89, 12.49],
-      title: "Attico Design",
-      city: "Roma",
-      category: "Lusso",
-      cost: "€€€€",
-      description: "Finiture di pregio in centro.",
-    },
-    {
-      id: 3,
-      position: [45.46, 9.19],
-      title: "Uffici Pro",
-      city: "Milano",
-      category: "Business",
-      cost: "€€€",
-      description: "Sede aziendale moderna.",
-    },
-  ];
-
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -145,11 +108,11 @@ export default function Cantieri() {
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
                 <MapRefresher />
 
-                {projectsData.map((project) => (
+                {worksitesData.map((project) => (
                   <Marker
                     key={project.id}
                     position={project.position}
-                    icon={customIcon}
+                    icon={MapPositionIcon()}
                     eventHandlers={{ click: () => setSelectedProject(project) }}
                   />
                 ))}
