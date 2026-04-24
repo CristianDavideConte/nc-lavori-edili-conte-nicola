@@ -4,10 +4,41 @@ import gsap from "gsap";
 import Carousel from "./Carousel";
 import BentoCard from "./BentoCard";
 import { CalendarIcon, EuroIcon, LocationIcon } from "./Icons";
+import { useCallback } from "react";
 
 export default function Bento({ project, onClose }) {
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
+
+  const handleClose = useCallback(() => {
+    gsap.to(overlayRef.current, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        onClose();
+
+        if (window.history.state && window.history.state.modalOpen) {
+          window.history.back();
+        }
+      },
+    });
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!project) return;
+
+    const handlePopState = (e) => {
+      e.preventDefault();
+      handleClose();
+    };
+
+    window.history.pushState({ modalOpen: true }, "");
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [project, handleClose]);
 
   useEffect(() => {
     if (project) {
@@ -27,14 +58,6 @@ export default function Bento({ project, onClose }) {
       document.body.style.overflow = "auto";
     };
   }, [project]);
-
-  const handleClose = () => {
-    gsap.to(overlayRef.current, {
-      opacity: 0,
-      duration: 0.3,
-      onComplete: onClose,
-    });
-  };
 
   if (!project) return null;
 

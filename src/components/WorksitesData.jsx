@@ -8,6 +8,7 @@ export const worksitesData = [
     cost: "150.000",
     description: "Intervento di restyling completo.",
     address: "Via sottofiume, 2",
+    images: ["cantieri/wip.jpg", "cantieri/wip.jpg"],
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ export const worksitesData = [
     cost: "35.000",
     description: "Finiture di pregio in centro.",
     address: "Piazza del colosseo, 1",
+    images: ["cantieri/wip.jpg"],
   },
   {
     id: 3,
@@ -28,5 +30,6 @@ export const worksitesData = [
     cost: "200.000",
     description: "Sede aziendale moderna.",
     address: "Via Borse, 5",
+    images: [],
   },
 ];
