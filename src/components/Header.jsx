@@ -9,6 +9,50 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const openMenu = () => setIsMenuOpen(true);
+
+  const closeMenu = () => {
+    gsap.to(menuRef.current, {
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        setIsMenuOpen(false);
+        // Se lo stato della cronologia è ancora quello del menu, lo "puliamo"
+        if (window.history.state?.menuOpen) {
+          window.history.back();
+        }
+      },
+    });
+  };
+
+  const handleNavigation = (path) => {
+    if (path === location.pathname) {
+      closeMenu();
+      return;
+    }
+
+    navigate(path);
+
+    closeMenu();
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isMenuOpen) {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      window.history.pushState({ menuOpen: true }, "");
+      window.addEventListener("popstate", handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isMenuOpen]);
+
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -33,30 +77,6 @@ export default function Header() {
       document.body.style.overflow = "auto";
     }
   }, [isMenuOpen]);
-
-  const openMenu = () => setIsMenuOpen(true);
-
-  const handleNavigation = (path) => {
-    if (path === location.pathname) {
-      gsap.to(menuRef.current, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => setIsMenuOpen(false),
-      });
-      return;
-    }
-
-    navigate(path);
-
-    gsap.to(menuRef.current, {
-      opacity: 0,
-      duration: 0.4,
-      ease: "power2.inOut",
-      onComplete: () => {
-        setIsMenuOpen(false);
-      },
-    });
-  };
 
   return (
     <>
@@ -100,31 +120,31 @@ export default function Header() {
           className="fixed inset-0 z-[100] bg-white/98 dark:bg-slate-950/98 backdrop-blur-3xl flex flex-col items-center justify-center"
         >
           <button
-            onClick={() => handleNavigation(location.pathname)}
+            onClick={closeMenu}
             className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-2xl font-bold"
           >
             ✕
           </button>
 
-          <div className="flex flex-col gap-10 text-center">
+          <div className="flex flex-col gap-10 text-center font-bold">
             <button
               ref={(el) => (linksRef.current[0] = el)}
               onClick={() => handleNavigation("/")}
-              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-4xl hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Chi Siamo
             </button>
             <button
               ref={(el) => (linksRef.current[1] = el)}
               onClick={() => handleNavigation("/cantieri")}
-              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-4xl hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               I Nostri Cantieri
             </button>
             <button
               ref={(el) => (linksRef.current[2] = el)}
               onClick={() => handleNavigation("/contatti")}
-              className="text-4xl font-bold hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-4xl hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Contattaci
             </button>
