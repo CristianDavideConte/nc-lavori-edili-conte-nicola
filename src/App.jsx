@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import gsap from "gsap";
 import Home from "./pages/Home";
 import Cantieri from "./pages/Cantieri";
@@ -154,6 +155,7 @@ function AppContent() {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AppContent />
     </Router>
   );
