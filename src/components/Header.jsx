@@ -86,19 +86,19 @@ export default function Header() {
         <div className="hidden md:flex gap-8">
           <Link
             to="/"
-            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            className="hover:text-blue-600 dark:hover:text-blue-400 uppercase font-medium transition-colors"
           >
             Chi Siamo
           </Link>
           <Link
             to="/cantieri"
-            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            className="hover:text-blue-600 dark:hover:text-blue-400 uppercase font-medium transition-colors"
           >
             I Nostri Cantieri
           </Link>
           <Link
             to="/contatti"
-            className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+            className="hover:text-blue-600 dark:hover:text-blue-400 uppercase font-medium transition-colors"
           >
             Contattaci
           </Link>
@@ -121,7 +121,7 @@ export default function Header() {
         >
           <button
             onClick={closeMenu}
-            className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-2xl font-bold"
+            className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-3xl font-bold"
           >
             ✕
           </button>
