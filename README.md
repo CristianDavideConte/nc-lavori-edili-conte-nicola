@@ -1,16 +1,17 @@
-# React + Vite
+# N.C. Lavori Edili di Nicola Conte
+### 🏗️ Edilizia di sostanza, risultati che durano 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Benvenuto nel repository del sito ufficiale di N.C. Lavori Edili. Questo progetto è l'estensione digitale della nostra impresa: un punto d'incontro elegante e moderno per scoprire i nostri servizi, esplorare la mappa interattiva dei nostri cantieri e richiedere sopralluoghi gratuiti in tutta Italia.
 
-Currently, two official plugins are available:
+### 💡 I Nostri Servizi
+- Ristrutturazioni: Interventi completi per interni ed esterni, consolidamento strutturale e finiture di pregio.
+- Efficientamento: Cappotti termici e isolamento per migliorare il comfort abitativo e ridurre i costi energetici.
+- Nuove Costruzioni: Realizzazione di edifici residenziali e industriali con i più alti standard di sicurezza.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### 📍 Sede Operativa
+- Lugo, Emilia-Romagna, Italia.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🌐 Contatti & Link Utili
+- Telefono: +39 3336477943
+- Email: nicolaconte999@gmail.com
+- Sito Web: https://cristiandavideconte.github.io/nc-lavori-edili-conte-nicola/
