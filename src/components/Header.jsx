@@ -121,7 +121,7 @@ export default function Header() {
         >
           <button
             onClick={closeMenu}
-            className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-3xl font-bold"
+            className="absolute top-5 right-5 md:top-10 md:right-10 z-[160] bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:scale-110 active:scale-90 transition-all"
           >
             ✕
           </button>
