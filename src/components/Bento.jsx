@@ -61,6 +61,12 @@ export default function Bento({ project, onClose }) {
 
   if (!project) return null;
 
+  const locationHref = project.href
+    ? project.href
+    : project.address
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${project.address}, ${project.city || ""}`)}`
+      : undefined;
+
   return createPortal(
     <div
       ref={overlayRef}
@@ -85,7 +91,13 @@ export default function Bento({ project, onClose }) {
             noPadding
             bg="bg-slate-100 dark:bg-slate-900"
           >
-            <Carousel images={project.images} />
+            <Carousel
+              images={
+                project.images && project.images.length > 0
+                  ? project.images
+                  : ["cantieri/wip.jpg"]
+              }
+            />
           </BentoCard>
 
           <BentoCard
@@ -123,8 +135,9 @@ export default function Bento({ project, onClose }) {
           </BentoCard>
 
           <BentoCard
-            className="min-h-[180px] md:min-h-[300px]"
+            className="min-h-[180px] md:min-h-[300px] group"
             bg="bg-slate-50 dark:bg-slate-900/50"
+            href={locationHref}
           >
             <div className="flex flex-col items-center justify-center text-center h-full w-full">
               <div className="text-3xl md:text-4xl mb-4 text-slate-700 dark:text-slate-300">
@@ -136,6 +149,11 @@ export default function Bento({ project, onClose }) {
               {project.address && (
                 <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mt-1">
                   {project.address}
+                </p>
+              )}
+              {locationHref && (
+                <p className="text-[10px] text-blue-600 dark:text-blue-500 font-bold uppercase mt-4 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Apri in Maps →
                 </p>
               )}
             </div>
