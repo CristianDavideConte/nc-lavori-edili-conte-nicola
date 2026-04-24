@@ -11,7 +11,7 @@ function AppContent() {
     <div className="flex flex-col min-h-screen font-sans text-gray-800 dark:text-slate-200 bg-white dark:bg-slate-950 transition-colors duration-300">
       <Header />
 
-      <main className="flex-grow pt-20 overflow-hidden">
+      <main className="flex-grow pt-20">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cantieri" element={<Cantieri />} />
