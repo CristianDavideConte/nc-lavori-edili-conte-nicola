@@ -17,7 +17,6 @@ export default function Header() {
       duration: 0.3,
       onComplete: () => {
         setIsMenuOpen(false);
-        // Se lo stato della cronologia è ancora quello del menu, lo "puliamo"
         if (window.history.state?.menuOpen) {
           window.history.back();
         }
@@ -32,7 +31,6 @@ export default function Header() {
     }
 
     navigate(path);
-
     closeMenu();
   };
 
