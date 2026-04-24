@@ -8,38 +8,58 @@ import { CalendarIcon, EuroIcon, LocationIcon } from "./Icons";
 export default function Bento({ project, onClose }) {
   const overlayRef = useRef(null);
   const containerRef = useRef(null);
+  const isClosing = useRef(false);
+  const onCloseRef = useRef(onClose);
 
-  const handleClose = useCallback(() => {
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  const closeAnimation = useCallback(() => {
+    if (isClosing.current) return;
+    isClosing.current = true;
+
     gsap.to(overlayRef.current, {
       opacity: 0,
       duration: 0.3,
       onComplete: () => {
-        onClose();
-        if (window.history.state && window.history.state.modalOpen) {
-          window.history.back();
-        }
+        onCloseRef.current();
       },
     });
-  }, [onClose]);
+  }, []);
 
   useEffect(() => {
     if (!project) return;
 
-    const handlePopState = (e) => {
-      e.preventDefault();
-      handleClose();
+    window.history.pushState({ modalOpen: true }, "");
+
+    const handlePopState = () => {
+      closeAnimation();
     };
 
-    window.history.pushState({ modalOpen: true }, "");
     window.addEventListener("popstate", handlePopState);
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [project, handleClose]);
+  }, [project, closeAnimation]);
+
+  const handleUserClose = useCallback(
+    (e) => {
+      if (e) e.stopPropagation();
+
+      if (window.history.state && window.history.state.modalOpen) {
+        window.history.back();
+      } else {
+        closeAnimation();
+      }
+    },
+    [closeAnimation],
+  );
 
   useEffect(() => {
     if (project) {
+      isClosing.current = false;
       document.body.style.overflow = "hidden";
       gsap.fromTo(
         overlayRef.current,
@@ -59,20 +79,22 @@ export default function Bento({ project, onClose }) {
 
   if (!project) return null;
 
-  const locationHref = project.href
-    ? project.href
-    : project.address
-      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${project.address}, ${project.city || ""}`)}`
-      : undefined;
+  const locationQuery = project.address
+    ? `${project.address}, ${project.city || ""}`
+    : project.city;
+
+  const locationHref = locationQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationQuery)}`
+    : undefined;
 
   return createPortal(
     <div
       ref={overlayRef}
       className="fixed inset-0 z-[100] bg-white dark:bg-slate-950 flex flex-col h-[100dvh] overflow-hidden"
-      onClick={handleClose}
+      onClick={handleUserClose}
     >
       <button
-        onClick={handleClose}
+        onClick={handleUserClose}
         className="absolute top-4 right-4 md:top-8 md:right-8 z-[160] bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:scale-110 active:scale-90 transition-all"
       >
         ✕
