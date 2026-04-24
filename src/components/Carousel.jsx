@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
+import { LeftArrowIcon, RightArrowIcon } from "./Icons";
 
 export default function Carousel({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -119,7 +120,7 @@ export default function Carousel({ images }) {
             }}
             className="absolute left-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-90 md:hover:scale-110 transition-all opacity-0 md:group-hover:opacity-100 pointer-events-auto"
           >
-            ←
+            <LeftArrowIcon />
           </button>
 
           <button
@@ -129,10 +130,9 @@ export default function Carousel({ images }) {
             }}
             className="absolute right-6 top-1/2 -translate-y-1/2 z-30 bg-white dark:bg-slate-800 text-slate-900 dark:text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl border border-slate-200 dark:border-slate-700 cursor-pointer active:scale-90 md:hover:scale-110 transition-all opacity-0 md:group-hover:opacity-100 pointer-events-auto"
           >
-            →
+            <RightArrowIcon />
           </button>
 
-          {/* INDICATORE APPLE STYLE: Punti fluttuanti con pillola attiva */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-30 pointer-events-auto drop-shadow-md">
             {images.map((_, idx) => (
               <button
