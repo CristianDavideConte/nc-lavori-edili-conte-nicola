@@ -12,14 +12,22 @@ const customIcon = new L.DivIcon({
   iconAnchor: [7, 7],
 });
 
-function MapResizer() {
+function MapRefresher() {
   const map = useMap();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       map.invalidateSize();
     }, 500);
-    return () => clearTimeout(timer);
+
+    window.addEventListener("resize", () => map.invalidateSize());
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", () => map.invalidateSize());
+    };
   }, [map]);
+
   return null;
 }
 
@@ -127,17 +135,15 @@ export default function Cantieri() {
               <MapContainer
                 center={[41.87, 12.56]}
                 zoom={5}
-                scrollWheelZoom={false}
+                scrollWheelZoom={true}
+                wheelPxPerZoomLevel={60}
                 zoomControl={false}
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  position: "absolute",
-                  inset: 0,
-                }}
+                touchZoom={true}
+                className="w-full h-full absolute inset-0 z-10"
+                style={{ height: "100%", width: "100%" }}
               >
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-                <MapResizer />
+                <MapRefresher />
 
                 {projectsData.map((project) => (
                   <Marker
