@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import gsap from "gsap";
 import Carousel from "./Carousel";
 import BentoCard from "./BentoCard";
+import { CalendarIcon, EuroIcon, LocationIcon } from "./Icons";
 
 export default function Bento({ project, onClose }) {
   const overlayRef = useRef(null);
@@ -74,10 +75,12 @@ export default function Bento({ project, onClose }) {
             </h2>
             <div className="flex flex-wrap gap-3">
               <span className="bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
-                📅 {project.year}
+                <CalendarIcon />
+                {project.year}
               </span>
               <span className="bg-white/20 backdrop-blur-md px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold uppercase tracking-widest">
-                💰 {project.cost}
+                <EuroIcon />
+                {project.cost}
               </span>
             </div>
           </BentoCard>
@@ -95,7 +98,9 @@ export default function Bento({ project, onClose }) {
             className="text-center items-center justify-center min-h-[180px] md:min-h-[300px]"
             bg="bg-slate-50 dark:bg-slate-900/50"
           >
-            <div className="text-3xl md:text-4xl mb-4">📍</div>
+            <div className="text-3xl md:text-4xl mb-4">
+              <LocationIcon />
+            </div>
             <p className="font-black text-slate-900 dark:text-white uppercase text-base md:text-lg tracking-tighter">
               Emilia-Romagna
             </p>

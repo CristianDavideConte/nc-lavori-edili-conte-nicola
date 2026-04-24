@@ -2,6 +2,11 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  EfficientamentoIcon,
+  RistrutturazioniIcon,
+  CostruzioniIcon,
+} from "../components/Icons";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -119,40 +124,43 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Ristrutturazioni */}
             <div className="service-card bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-2xl mb-8 text-blue-600">
-                🏠
+              <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 mb-8">
+                <RistrutturazioniIcon />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white uppercase tracking-tight">
                 Ristrutturazioni
               </h4>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium">
                 Interventi completi per interni ed esterni: dal consolidamento
                 strutturale alle finiture di pregio.
               </p>
             </div>
 
+            {/* Efficientamento */}
             <div className="service-card bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-2xl mb-8">
-                🌡️
+              <div className="w-14 h-14 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 mb-8">
+                <EfficientamentoIcon />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white uppercase tracking-tight">
                 Efficientamento
               </h4>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium">
                 Cappotti termici e isolamento per migliorare il comfort
                 abitativo e ridurre i costi energetici.
               </p>
             </div>
 
+            {/* Nuove Costruzioni */}
             <div className="service-card bg-white dark:bg-slate-800 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-2xl mb-8 text-amber-600">
-                🧱
+              <div className="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-amber-600 mb-8">
+                <CostruzioniIcon />
               </div>
               <h4 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white uppercase tracking-tight">
                 Nuove Costruzioni
               </h4>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium">
                 Realizzazione di edifici residenziali e industriali con i più
                 alti standard di sicurezza e sostenibilità.
               </p>
