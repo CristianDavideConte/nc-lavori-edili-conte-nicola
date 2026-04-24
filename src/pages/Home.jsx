@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,48 +12,82 @@ import BentoCard from "../components/BentoCard";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const pageRef = useRef(null);
+  const heroContentRef = useRef(null);
+  const heroImageRef = useRef(null);
   const servicesRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     ScrollTrigger.getAll().forEach((t) => t.kill());
 
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray(".service-card");
+      const tl = gsap.timeline();
 
+      gsap.set([heroContentRef.current.children, heroImageRef.current], {
+        opacity: 0,
+        y: 30,
+      });
+      gsap.set(heroImageRef.current, { scale: 0.95 });
+
+      tl.to(pageRef.current, { autoAlpha: 1, duration: 0.5 })
+        .to(
+          heroContentRef.current.children,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.07,
+            ease: "power3.out",
+          },
+          "-=0.2",
+        )
+        .to(
+          heroImageRef.current,
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: "back.out(1.2)",
+          },
+          "-=0.6",
+        );
+
+      const cards = gsap.utils.toArray(".service-card");
       if (cards.length > 0) {
         gsap.fromTo(
           cards,
-          {
-            opacity: 0,
-            y: 30,
-          },
+          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.4,
-            stagger: 0.2,
+            duration: 0.3,
+            stagger: 0.07,
             ease: "power2.out",
             scrollTrigger: {
               trigger: servicesRef.current,
-              start: "top 75%",
+              start: "top 60%",
               toggleActions: "play none none none",
             },
           },
         );
       }
-    });
+    }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div className="bg-white dark:bg-slate-950">
-      {/* HERO SECTION */}
+    <div
+      ref={pageRef}
+      className="bg-white dark:bg-slate-950"
+      style={{ visibility: "hidden" }}
+    >
       <section className="relative min-h-[90vh] flex items-center pt-24 pb-24 md:py-0 px-6">
         <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center gap-12 md:gap-16">
-          <div className="w-full md:flex-1 text-left z-20">
-            <h1 className="text-sm tracking-[0.2em] font-bold text-blue-600 mb-6">
-              N.C. Lavori Edili — Italia
+          <div ref={heroContentRef} className="w-full md:flex-1 text-left z-20">
+            <h1 className="text-sm tracking-[0.2em] font-bold text-blue-600 mb-6 uppercase">
+              N.C. Lavori Edili — Lugo
             </h1>
             <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-[1.05] mb-8 tracking-tighter">
               Edilizia di sostanza, <br />
@@ -80,7 +114,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="w-full md:flex-1 relative">
+          <div ref={heroImageRef} className="w-full md:flex-1 relative">
             <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-[8px] md:border-[12px] border-slate-50 dark:border-slate-900">
               <img
                 src="cantieri/wip.jpg"
@@ -88,11 +122,17 @@ export default function Home() {
                 className="w-full h-[320px] md:h-[520px] object-cover"
               />
             </div>
+            <div className="absolute -bottom-8 -left-2 md:-bottom-10 md:-left-10 bg-blue-600 text-white p-7 md:p-10 rounded-[2.5rem] shadow-2xl z-20">
+              <p className="text-4xl md:text-5xl font-black mb-1">25+</p>
+              <p className="text-[10px] uppercase tracking-widest font-black opacity-90 leading-tight">
+                Anni di <br />
+                esperienza
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* SERVICES SECTION */}
       <section
         ref={servicesRef}
         className="py-24 md:py-32 px-6 bg-slate-50 dark:bg-slate-900/40"
@@ -148,7 +188,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA SECTION */}
       <section className="py-24 md:py-32 px-6">
         <div className="max-w-5xl mx-auto bg-slate-900 dark:bg-blue-700 rounded-[3rem] p-12 md:p-20 text-center text-white relative overflow-hidden shadow-2xl">
           <h3 className="text-4xl md:text-5xl font-black mb-6 leading-tight tracking-tighter">

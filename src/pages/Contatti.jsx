@@ -38,7 +38,7 @@ export default function Contatti() {
             stagger: 0.07,
             ease: "back.out(1.2)",
           },
-          "-=0.5",
+          "-=0.6",
         );
     }, pageRef);
 

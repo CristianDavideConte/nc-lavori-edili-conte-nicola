@@ -30,6 +30,7 @@ export default function Cantieri() {
   const heroContentRef = useRef(null);
   const mapWrapperRef = useRef(null);
   const [selectedProject, setSelectedProject] = useState(null);
+
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
@@ -59,7 +60,7 @@ export default function Cantieri() {
             duration: 0.6,
             ease: "back.out(1.2)",
           },
-          "-=0.5",
+          "-=0.6",
         );
     }, pageRef);
     return () => ctx.revert();
