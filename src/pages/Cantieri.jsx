@@ -100,7 +100,7 @@ export default function Cantieri() {
                 center={[41.87, 12.56]}
                 zoom={5}
                 scrollWheelZoom={true}
-                wheelPxPerZoomLevel={60}
+                wheelDebounceTime={1}
                 zoomControl={false}
                 touchZoom={true}
                 className="w-full h-full absolute inset-0 z-10"
